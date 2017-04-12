@@ -1,0 +1,6 @@
+linters: with_defaults(
+    object_length_linter(40),
+    line_length_linter(80),
+    snake_case_lintr = NULL,
+    NULL
+  )

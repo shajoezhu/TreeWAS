@@ -55,8 +55,7 @@ calculate.llk.grid_scaled_additive <- function(
 #' @export
 #' @examples
 #'
-cc_d.llk_additive <- function (b0, b1, aff, unaf)
-{
+cc_d.llk_additive <- function (b0, b1, aff, unaf) {
 
     tmp1 <- (aff[1] + unaf[1])/(1 + exp(-b0))
     tmp2 <- (aff[2] + unaf[2])/(1 + exp(-(b0 + b1)))
@@ -76,8 +75,7 @@ cc_d.llk_additive <- function (b0, b1, aff, unaf)
 #' @export
 #' @examples
 #'
-cc_llk_additive <- function(b0, b1, aff, unaf)
-{
+cc_llk_additive <- function(b0, b1, aff, unaf) {
     return(b0 * sum(aff) + b1 * aff[2] + 2 * b1 * aff[3] - (aff[1] +
         unaf[1]) * log(1 + exp(b0)) - (aff[2] + unaf[2]) * log(1 +
         exp(b0 + b1)) - (aff[3] + unaf[3]) * log(1 + exp(b0 +
@@ -93,8 +91,7 @@ cc_llk_additive <- function(b0, b1, aff, unaf)
 #' @export
 #' @examples
 #'
-calculate.integrated.llk_scaled_additive <- function(prior, llk.surf, scaled = TRUE)
-{
+calculate.integrated.llk_scaled_additive <- function(prior, llk.surf, scaled = TRUE) {
     if (scaled) {
         llk.sum <- sum(prior$prior * llk.surf$op)
         return(llk.sum)
@@ -127,8 +124,7 @@ calculate.integrated.llk_scaled_additive <- function(prior, llk.surf, scaled = T
 #' @examples
 #'
 get.posterior.node_additive <- function(forward, backward, prior, id = 1, plot = FALSE,
-    return.ci = TRUE, verbose = FALSE, ci.level = 0.95, log.plot = TRUE)
-{
+    return.ci = TRUE, verbose = FALSE, ci.level = 0.95, log.plot = TRUE) {
     tmp <- forward[[id]]$op * backward[[id]]$op
     tmp <- tmp/sum(tmp)
     post.null <- tmp[null.id[1]]

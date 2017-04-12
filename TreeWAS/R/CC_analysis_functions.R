@@ -44,7 +44,7 @@ prepare_tree_table <- function(
     ## Check if we need to create Top node
     top.nodes <- t[ ! t$parent_id %in% t$node_id,,drop=F]
 
-    if( nrow(top.nodes) > 1 ) {
+    if(nrow(top.nodes) > 1 ) {
 
         ## create TOP node
         top.node <- data.frame(
@@ -149,7 +149,7 @@ prepare_tree_table <- function(
     ## Filter nodes with observations below specified limit
     tree$REMOVE <- FALSE
 
-    for( i in 1:length(i.ter) ) {
+    for(i in 1:length(i.ter) ) {
         if(is.na(tree[i.ter[i],'counts'])) {
             tree[i.ter[i],'REMOVE'] <- TRUE
         } else if(tree[i.ter[i],'counts'] <= NODE.COUNT.LIMIT) {
@@ -157,7 +157,7 @@ prepare_tree_table <- function(
         }
     }
 
-    for( i in 1:length(i.par) ) {
+    for(i in 1:length(i.par) ) {
         w.d <- which(tree[,'Par'] == i.par[i])
 
         if( all(tree[w.d,'REMOVE']) ) {
@@ -364,12 +364,15 @@ calculate.llk.grid_scaled <- function(
     }
 
     for (i in 1:length(jt.prior$b1.grid)) for (j in 1:length(jt.prior$b2.grid)) {
-        tmp <- uniroot(cc_d.llk, c(-100, 100), b1=jt.prior$b1.grid[i], b2=jt.prior$b2.grid[j], aff=data[4:6], unaf=data[1:3]);
+        tmp <- uniroot(cc_d.llk, c(-100, 100), b1=jt.prior$b1.grid[i],
+                   b2=jt.prior$b2.grid[j], aff=data[4:6], unaf=data[1:3]);
         b0.est[i,j] <- tmp$root;
-        op[i,j] <- cc_llk(b0=b0.est[i,j], b1=jt.prior$b1.grid[i], b2=jt.prior$b2.grid[j], aff=data[4:6], unaf=data[1:3]);
+        op[i,j] <- cc_llk(b0=b0.est[i,j], b1=jt.prior$b1.grid[i],
+                       b2=jt.prior$b2.grid[j], aff=data[4:6], unaf=data[1:3]);
     }
 
-    if (do.plot) image(x=jt.prior$b1.grid, y=jt.prior$b2.grid, z=op, main="LLK", xlab="B.het", ylab="B.hom");
+    if (do.plot) image(x=jt.prior$b1.grid, y=jt.prior$b2.grid, z=op, main="LLK",
+                     xlab="B.het", ylab="B.hom");
 
     mx <- max(op);
     if (scaled) op<-exp(op-mx);
@@ -398,7 +401,8 @@ calculate.integrated.llk_scaled <- function(
     scaled=TRUE
 ) {
 
-    if (scaled) {	## Here, max of LLK.surf is 1 - this is NOT logged
+    if (scaled) {
+        # Here, max of LLK.surf is 1 - this is NOT logged
         llk.sum <- sum(jt.prior$jt.prior*llk.surf$op);
         return(llk.sum);
     } else {
@@ -449,16 +453,19 @@ get.posterior.node <- function(
     post.null <- tmp[null.id[1],null.id[2]]
     post.active <- 1 - post.null
 
-    ## Posterior | node active
+    # Posterior | node active
     tmp[null.id[1],null.id[2]] <- 0
     tmp <- tmp/sum(tmp);
 
     mx <- arrayInd(which.max(tmp), dim(tmp));
     if(verbose) cat("\nNode ", id);
-    if(verbose) cat("\nMax at b1 = ", jt.prior$b1.grid[mx[1]], ", b2 = ", jt.prior$b2.grid[mx[2]]);
-    if(verbose) cat("\nSummed LLK = ", log(sum(forward[[id]]$op*backward[[id]]$op))+forward[[id]]$lmx+backward[[id]]$lmx);
+    if(verbose) cat("\nMax at b1 = ",
+                    jt.prior$b1.grid[mx[1]], ", b2 = ", jt.prior$b2.grid[mx[2]]);
+    if(verbose) cat("\nSummed LLK = ",
+                    log(sum(forward[[id]]$op*backward[[id]]$op))+
+                    forward[[id]]$lmx+backward[[id]]$lmx);
 
-    ## return the C.I. conditional on node being active
+    # return the C.I. conditional on node being active
     if (return.ci) {
         oo <- order(tmp, decreasing=T);
         cs <- cumsum(tmp[arrayInd(oo, dim(tmp))]);
@@ -466,13 +473,16 @@ get.posterior.node <- function(
         inds <- arrayInd(w.ci, dim(tmp));
         rg.1 <- range(jt.prior$b1.grid[inds[,1]]);
         rg.2 <- range(jt.prior$b2.grid[inds[,2]]);
-        if(verbose) cat("\nCI b1(", ci.level, ") = ", paste(rg.1, collapse=" - "), sep="");
-        if(verbose) cat("\nCI b2(", ci.level, ") = ", paste(rg.2, collapse=" - "), sep="");
+        if(verbose) cat("\nCI b1(", ci.level, ") = ",
+                        paste(rg.1, collapse=" - "), sep="");
+        if(verbose) cat("\nCI b2(", ci.level, ") = ",
+                        paste(rg.2, collapse=" - "), sep="");
     }
 
     if (plot) {
         if(log.plot) tmp <- log(tmp);
-        image(x=jt.prior$b1.grid, y=jt.prior$b2.grid, z=tmp, main=paste("Node", id), xlab="B1", ylab="B2");
+        image(x=jt.prior$b1.grid, y=jt.prior$b2.grid, z=tmp,
+            main=paste("Node", id), xlab="B1", ylab="B2");
     }
 
     if(verbose) cat("\n\n");
@@ -483,7 +493,8 @@ get.posterior.node <- function(
     out <- data.frame(
         max_b1=jt.prior$b1.grid[mx[1]],
         max_b2=jt.prior$b2.grid[mx[2]],
-        summed_llk=log(sum(forward[[id]]$op*backward[[id]]$op))+forward[[id]]$lmx+backward[[id]]$lmx,
+        summed_llk = log(sum(forward[[id]]$op*backward[[id]]$op))+
+                     forward[[id]]$lmx+backward[[id]]$lmx,
         b1_ci_lhs=rg.1[1] - spac1/2,
         b1_ci_rhs=rg.1[2] + spac1/2,
         b2_ci_lhs=rg.2[1] - spac2/2,

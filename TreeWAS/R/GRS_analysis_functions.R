@@ -439,5 +439,3 @@ prepare_tree_table_grs <- function(
 
     return(tree)
 }
-
-
