@@ -1,9 +1,11 @@
 # R project
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^TreeWAS.*.gz$
 
 # bash scripts
-^buildLocally.sh$
+^buildLocal.sh$
+^tools$
 
 # git
 ^\.gitignore$
@@ -11,3 +13,6 @@
 
 # testthat
 ^tests/testthat/Rplots.pdf$
+
+# C.I.
+^\.lintr$
